@@ -1,2 +1,4 @@
 # I2C_TRANSLATOR_recruit-vicharak
 An I2C translator that detects start/stop, captures the address, checks for a match, and bridges signals between master and target only when the address is correct, ensuring safe and proper communication.
+
+This project implements an I²C address-translator bridge using an FPGA. The module monitors the master’s SCL and SDA lines, detects START and STOP conditions, and captures the 7-bit address along with the R/W bit. It compares the received address with a predefined address and, if matched, generates an ACK and enables a bridge so the master communicates with the target device through the translator. If the address does not match, the frame is ignored. The design uses a synchronous FSM for reliability, maintains proper open-drain behavior, and ensures clean, glitch-free signal forwarding across the I²C bus.
