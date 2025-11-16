@@ -1,0 +1,37 @@
+I2C Translator - Brief Documentation
+1. Architecture Overview
+- The design works as an I²C address‑translator bridge.
+- It listens to the master SCL/SDA, captures the address byte, and compares it with a configured address.
+- If matched, it enables a bridge so master signals pass to the target device.
+- If not matched, it stays idle.
+- All signals follow open‑drain behavior.
+2. FSM / Logic Explanation
+IDLE
+- Waits for START.
+- Resets registers and counters.
+
+ADDR
+- Captures address bits on rising SCL.
+
+DETE
+- Compares received address with configured one.
+- If match → ACK + bridge enable.
+- If R/W=1 → R_BRIDGE, else → W_BRIDGE.
+
+PASS
+- Ignores bus until STOP or new START.
+
+R_BRIDGE / W_BRIDGE
+- Active bridging.
+- On STOP → return to IDLE.
+3. Address Translation Implementation
+- Incoming address loads into add_reg.
+- r_add (7 bits) compared with configured addr.
+- If equal → translator ACKs and bridges.
+- R/W bit decides direction path.
+4. Design Challenges Faced
+- Correct START/STOP detection.
+- Capturing data only on rising SCL.
+- Maintaining open‑drain behavior.
+- Avoiding glitches by keeping everything synchronous.
+- Clean bridge enable/disable logic.
